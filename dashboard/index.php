@@ -1,9 +1,6 @@
 <!-- Disini dilakukan logic yang berkaitan dengan data dan untuk menampung data tersebut pada variabel -->
 <?php
-if (!isset($_COOKIE['id_akun'])){
-    header("Location: ../index.php");
-}
-
+include '../backend/protected.php';
 include '../components/Drawer.php';
 $text = "Anggaran";
 ?>

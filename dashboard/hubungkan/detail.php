@@ -2,6 +2,8 @@
 <!-- Dan untuk menampung data tersebut pada sebuah variabel agar bisa digunakan di dalam seluruh file -->
 <?php
 include '../../components/Drawer.php';
+include '../../backend/protected.php';
+
 ?>
 
 <!-- Template HTML dari halaman terkait -->

@@ -4,6 +4,8 @@
 include '../../components/Drawer.php';
 include '../../backend/connectdb.php';
 include '../../backend/getParams.php';
+include '../../backend/protected.php';
+
 
 // ambil id anggaran dari url
 $url = $_SERVER['REQUEST_URI'];

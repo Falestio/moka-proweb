@@ -4,6 +4,7 @@
 include '../../components/Drawer.php';
 include '../../backend/connectdb.php';
 include '../../backend/getParams.php';
+include '../../backend/protected.php';
 
 // Dapatkan id tujuan dari parameter URL
 $url = $_SERVER['REQUEST_URI'];

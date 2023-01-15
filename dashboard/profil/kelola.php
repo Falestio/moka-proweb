@@ -4,6 +4,8 @@
 include '../../components/Drawer.php';
 include '../../backend/connectdb.php';
 include '../../backend/getParams.php';
+include '../../backend/protected.php';
+
 
 $id_akun = $_COOKIE['id_akun'];
 
