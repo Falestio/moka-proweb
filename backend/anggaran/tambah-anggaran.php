@@ -3,9 +3,11 @@ include '../connectdb.php';
 include '../randomid.php';
 
 $idAkun = $_COOKIE['id_akun'];
+
 $namaAnggaran = $_POST['nama_anggaran'];
 $keteranganAnggaran = $_POST['keterangan'];
 $jumlahAnggaran = $_POST['jumlah_anggaran'];
+
 $icon = "https://www.flaticon.com/svg/static/icons/svg/149/149071.svg";
 $idAnggaran = randomid(11);
 

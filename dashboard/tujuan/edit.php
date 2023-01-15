@@ -14,7 +14,6 @@ $id_tujuan = $params["id"];
 $query = "SELECT * FROM tujuan WHERE id_tujuan = '$id_tujuan'";
 $result = mysqli_query($conn, $query);
 $tujuan = mysqli_fetch_assoc($result);
-
 ?>
 
 <!-- Template HTML dari halaman terkait -->
