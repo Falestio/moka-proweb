@@ -2,14 +2,21 @@
 <!-- Dan untuk menampung data tersebut pada sebuah variabel agar bisa digunakan di dalam seluruh file -->
 <?php
 include '../../components/Drawer.php';
+include '../../backend/connectdb.php';
+
+$id_akun = $_COOKIE['id_akun'];
+
+$query = "SELECT * FROM akun WHERE id_akun = '$id_akun'";
+$result = mysqli_query($conn, $query);
+$akun = mysqli_fetch_assoc($result);
 ?>
 
 <!-- Template HTML dari halaman terkait -->
 <?php ob_start(); ?>
 <div class="top-main-content">
     <img src="../../assets/img/profilePicture.jpg" class="img" width="150" /><br />
-    <span class="username">Ananda Pratama</span>
-    <span class="email">anandapratama@gmail.com</span>
+    <span class="username"><?= $akun['nama'] ?></span>
+    <span class="email"><?= $akun['email'] ?></span>
 </div>
 <center>
     <div class="main-content">

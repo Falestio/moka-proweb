@@ -37,7 +37,7 @@ $result = mysqli_query($conn, $query);
                         </svg>
                         <div class="card__body--content--text">
                             <p class="card__body--content--text--name"><?= $tujuan["nama_tujuan"] ?></p>
-                            <span class="card__body--content--text--balance"><?= $tujuan["jumlah_tujuan"] ?></span>
+                            <span class="card__body--content--text--balance">Rp. <?= $tujuan["jumlah_tujuan"] ?></span>
                         </div>
                     </a>
                 <?php endforeach ?>

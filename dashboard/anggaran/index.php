@@ -38,7 +38,7 @@ $daftarAnggaranResult = $conn->query($daftarAnggaranQuery);
                         </svg>
                         <div class="card__body--content--text">
                             <p class="card__body--content--text--name"><?= $anggaran["nama_anggaran"] ?></p>
-                            <span class="card__body--content--text--balance">Anggaran Awal <?= $anggaran["jumlah_anggaran"] ?></span>
+                            <span class="card__body--content--text--balance">Anggaran Awal Rp. <?= $anggaran["jumlah_anggaran"] ?></span>
                         </div>
                     </a>
                 <?php endforeach; ?>

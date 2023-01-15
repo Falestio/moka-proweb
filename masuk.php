@@ -119,7 +119,7 @@
                         <input class="btn" type="submit" value="Masuk">
                     </div>
                 </form>
-                <div class="login-form-footer">
+                <!-- <div class="login-form-footer">
                     <button class="btn">Google</button>
                     <span>atau</span>
                     <button class="btn">Facebook</button>
@@ -139,7 +139,7 @@
                         </p>
                     </form>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </body>

@@ -1,7 +1,18 @@
-<!-- Disini dilakukan logic yang berkaitan dengan data (CRUD) -->
-<!-- Dan untuk menampung data tersebut pada sebuah variabel agar bisa digunakan di dalam seluruh file -->
 <?php
 include '../../components/Drawer.php';
+include '../../backend/connectdb.php';
+include '../../backend/getParams.php';
+
+// Dapatkan id tujuan dari parameter URL
+$url = $_SERVER['REQUEST_URI'];
+$params = getParams($url);
+$id_dompet = $params["id"];
+
+// lakukan query untuk mendapatkan data tujuan berdasarkan id tujuan
+$query = "SELECT * FROM dompet WHERE id_dompet = '$id_dompet'";
+$result = mysqli_query($conn, $query);
+$dompet = mysqli_fetch_assoc($result);
+
 ?>
 
 <!-- Template HTML dari halaman terkait -->
@@ -15,27 +26,27 @@ include '../../components/Drawer.php';
                 </svg>
             </a>
             <div class="card__header--title">
-                <svg class="menu__item--icon" width="32" height="32" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M21 18v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1h-9a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2m0-2h10V8H12m4 5.5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5Z" />
+                <svg width="32" height="32" viewBox="0 0 256 256">
+                    <path fill="currentColor" d="M221.9 83.2a104 104 0 0 1-20.4 118.3a103.8 103.8 0 0 1-147 0a103.8 103.8 0 0 1 0-147A104 104 0 0 1 195.7 49l22.6-22.7a8.1 8.1 0 0 1 11.4 11.4l-62.1 62l-33.9 34a8.2 8.2 0 0 1-11.4 0a8.1 8.1 0 0 1 0-11.4l27.8-27.7a40.2 40.2 0 1 0 17.8 31.1a8 8 0 0 1 7.6-8.4a7.9 7.9 0 0 1 8.4 7.5a56 56 0 1 1-22.4-41.6l22.8-22.8a87.9 87.9 0 1 0 23.1 29.7a8 8 0 0 1 14.5-6.9Z" />
                 </svg>
-                <h2>Tambah Dompet</h2>
+                <h2>Ubah Dompet</h2>
             </div>
         </div>
         <div class="card__body">
-            <form class="form" action="/moka-native/backend/dompet/tambah-dompet.php" method="post">
+            <form class="form" action="/moka-native/backend/dompet/edit-dompet.php?id=<?= $dompet["id_dompet"] ?>" method="post">
                 <div class="form-control">
                     <label for="name" class="label">Nama</label>
-                    <input id="name" name="nama_dompet" type="text" class="input" />
+                    <input id="name" name="nama_dompet" type="text" class="input" value="<?= $dompet["nama"] ?>"/>
                 </div>
                 <div class="form-control">
                     <label for="keterangan" class="label">Keterangan</label>
-                    <input id="keterangan" name="keterangan" type="text" class="input" />
+                    <input id="keterangan" name="keterangan" type="text" class="input" value="<?= $dompet["keterangan"] ?>"/>
                 </div>
                 <div class="form-control">
                     <label for="jumlah" class="label">Saldo Awal</label>
-                    <input id="jumlah" name="saldo_awal" type="number" class="input" />
+                    <input id="jumlah" name="saldo_awal" type="text" class="input" value="<?= $dompet["saldo"] ?>"/>
                 </div>
-                <input type="submit" class="btn" value="Tambah">
+                <input class="btn" value="Ubah" type="submit">
             </form>
         </div>
     </div>

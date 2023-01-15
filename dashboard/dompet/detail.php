@@ -2,7 +2,19 @@
 <!-- Dan untuk menampung data tersebut pada sebuah variabel agar bisa digunakan di dalam seluruh file -->
 <?php
 include '../../components/Drawer.php';
+include '../../backend/connectdb.php';
+include '../../backend/getParams.php';
+
+$url = $_SERVER['REQUEST_URI'];
+$params = getParams($url);
+$id_dompet = $params["id"];
+
+$query = "SELECT * FROM dompet WHERE id_dompet = '$id_dompet'";
+$result = mysqli_query($conn, $query);
+$dompet = mysqli_fetch_assoc($result);
+
 ?>
+
 
 <!-- Template HTML dari halaman terkait -->
 <?php ob_start(); ?>
@@ -19,7 +31,7 @@ include '../../components/Drawer.php';
                     <svg width="32" height="32" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M21 18v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1h-9a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2m0-2h10V8H12m4 5.5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5Z" />
                     </svg>
-                    <h2>Utama</h2>
+                    <h2><?= $dompet['nama'] ?></h2>
                 </div>
             </div>
             <div class="dropdown">
@@ -29,15 +41,15 @@ include '../../components/Drawer.php';
                     </svg>
                 </div>
                 <div class="dropdown-menu">
-                    <a href="tambah.php">Edit</a>
-                    <a href="#">Delete</a>
+                    <a href="edit.php?id=<?= $dompet['id_dompet'] ?>">Ubah</a>
+                    <a href="/moka-native/backend/dompet/delete-dompet.php?id=<?= $dompet['id_dompet'] ?>">Hapus</a>
                 </div>
             </div>
         </div>
         <div class="card__body">
             <div class="saldo">
                 <h2>Saldo:</h2>
-                <span>Rp. 44.235.000</span>
+                <span>Rp. <?= $dompet['saldo'] ?></span>
             </div>
             <div class="chart">
                 <div class="pemasukan">
