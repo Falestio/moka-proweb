@@ -6,7 +6,7 @@ include '../../backend/connectdb.php';
 include '../../backend/protected.php';
 
 $id_akun = $_COOKIE['id_akun'];
-// query daftasr tujuan
+// query daftar tujuan
 $query = "SELECT * FROM tujuan WHERE id_akun = '$id_akun'";
 $result = mysqli_query($conn, $query);
 

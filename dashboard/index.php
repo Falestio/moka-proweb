@@ -2,7 +2,26 @@
 <?php
 include '../backend/protected.php';
 include '../components/Drawer.php';
-$text = "Anggaran";
+include '../backend/connectdb.php';
+
+$id_akun = $_COOKIE['id_akun'];
+// tampilkan data anggaran
+$anggaranQuery = "SELECT * FROM anggaran WHERE id_akun = '$id_akun'";
+$anggaranResult = mysqli_query($conn, $anggaranQuery);
+
+// tampilkan data tujuan
+$tujuanQuery = "SELECT * FROM tujuan WHERE id_akun = '$id_akun'";
+$tujuanResult = mysqli_query($conn, $tujuanQuery);
+
+// tampilkan data transaksi
+// $transaksiQuery = "SELECT * FROM transaksi WHERE id_akun = '$id_akun'";
+// $transaksiResult = mysqli_query($conn, $transaksiQuery);
+
+// tampilkan data dompet
+$dompetQuery = "SELECT * FROM dompet WHERE id_akun = '$id_akun'";
+$dompetResult = mysqli_query($conn, $dompetQuery);
+
+
 ?>
 
 <!-- Template HTML dari halaman terkait -->
@@ -15,39 +34,25 @@ $text = "Anggaran";
                     <path fill="currentColor" d="M19.435 4.065H4.565a2.5 2.5 0 0 0-2.5 2.5v10.87a2.5 2.5 0 0 0 2.5 2.5h14.87a2.5 2.5 0 0 0 2.5-2.5V6.565a2.5 2.5 0 0 0-2.5-2.5Zm1.5 9.93h-6.42a2 2 0 0 1 0-4h6.42Zm-6.42-5a3 3 0 0 0 0 6h6.42v2.44a1.5 1.5 0 0 1-1.5 1.5H4.565a1.5 1.5 0 0 1-1.5-1.5V6.565a1.5 1.5 0 0 1 1.5-1.5h14.87a1.5 1.5 0 0 1 1.5 1.5v2.43Z" />
                     <circle cx="14.519" cy="11.996" r="1" fill="currentColor" />
                 </svg>
-                <h2><?php echo $text ?></h2>
+                <h2>Anggaran</h2>
             </div>
             <a href="anggaran/tambah.php" class="card__header--button btn">Tambah</a>
         </div>
         <div class="card__body">
             <div class="card__body--contents-wrapper">
+                
+                <?php foreach ($anggaranResult as $anggaran): ?>
                 <div class="card__body--content">
                     <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
                         <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
                     </svg>
                     <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Perabotan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
+                        <p class="card__body--content--text--name"><?= $anggaran["nama_anggaran"] ?></p>
+                        <span class="card__body--content--text--balance">Rp <?= $anggaran["jumlah_anggaran"] ?></span>
                     </div>
                 </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Makan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Liburan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
+                <?php endforeach; ?>
+
             </div>
         </div>
     </div>
@@ -66,33 +71,19 @@ $text = "Anggaran";
         </div>
         <div class="card__body">
             <div class="card__body--contents-wrapper">
+
+                <?php foreach ($tujuanResult as $tujuan): ?>
                 <div class="card__body--content">
                     <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
                         <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
                     </svg>
                     <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Perabotan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
+                        <p class="card__body--content--text--name"><?= $tujuan["nama_tujuan"] ?></p>
+                        <span class="card__body--content--text--balance">Target Rp <?= $tujuan["jumlah_tujuan"] ?></span>
                     </div>
                 </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Makan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Liburan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
+                <?php endforeach; ?>
+
             </div>
         </div>
     </div>
@@ -110,33 +101,17 @@ $text = "Anggaran";
         </div>
         <div class="card__body">
             <div class="card__body--contents-wrapper">
+                
                 <div class="card__body--content">
                     <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
                         <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
                     </svg>
                     <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Perabotan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
+                        <p class="card__body--content--text--name">Transkasi</p>
+                        <span class="card__body--content--text--balance">Rp 8000</span>
                     </div>
                 </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Makan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Liburan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -152,33 +127,17 @@ $text = "Anggaran";
         </div>
         <div class="card__body">
             <div class="card__body--contents-wrapper">
+                <?php foreach($dompetResult as $dompet): ?>
                 <div class="card__body--content">
                     <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
                         <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
                     </svg>
                     <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Perabotan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
+                        <p class="card__body--content--text--name"><?= $dompet["nama"] ?></p>
+                        <span class="card__body--content--text--balance">Saldo Rp <?= $dompet["saldo"] ?></span>
                     </div>
                 </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Makan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
-                <div class="card__body--content">
-                    <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                        <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                    </svg>
-                    <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Liburan</p>
-                        <span class="card__body--content--text--balance">Sisa Rp 40.000.000</span>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
