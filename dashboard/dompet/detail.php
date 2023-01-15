@@ -41,8 +41,8 @@ $dompet = mysqli_fetch_assoc($result);
                     </svg>
                 </div>
                 <div class="dropdown-menu">
-                    <a href="tambah.php">Edit</a>
-                    <a href="#">Delete</a>
+                    <a href="edit.php?id=<?= $dompet['id_dompet'] ?>">Ubah</a>
+                    <a href="/moka-native/backend/dompet/delete-dompet.php?id=<?= $dompet['id_dompet'] ?>">Hapus</a>
                 </div>
             </div>
         </div>
