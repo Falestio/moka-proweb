@@ -3,6 +3,20 @@
 <?php
 include '../../components/Drawer.php';
 include '../../backend/protected.php';
+include '../../backend/connectdb.php';
+$id_akun = $_COOKIE['id_akun'];
+
+// fetch data dompet
+$dompetQuery = "SELECT * FROM dompet WHERE id_akun = '$id_akun'";
+$dompetResult = mysqli_query($conn, $dompetQuery);
+
+// fetch data anggaran
+$anggaranQuery = "SELECT * FROM anggaran WHERE id_akun = '$id_akun'";
+$anggaranResult = mysqli_query($conn, $anggaranQuery);
+
+// fetch data tujuan
+$tujuanQuery = "SELECT * FROM tujuan WHERE id_akun = '$id_akun'";
+$tujuanResult = mysqli_query($conn, $tujuanQuery);
 
 ?>
 
@@ -24,46 +38,55 @@ include '../../backend/protected.php';
             </div>
         </div>
         <div class="card__body">
-            <form class="form">
+            <form class="form" action="/moka-native/backend/transaksi/tambah-transaksi.php" method="post">
                 <div class="form-control">
                     <label for="name" class="label">Nama</label>
-                    <input id="name" type="text" class="input" />
+                    <input id="name" name="judul" type="text" class="input" />
                 </div>
                 <div class="form-control">
                     <label for="jenis-transaksi" class="label">Jenis Transaksi</label>
-                    <select id="jenis-transaksi" class="select">
-                        <option>Pemasukan</option>
-                        <option>Pengeluaran</option>
+                    <select id="jenis-transaksi" name="jenis_transaksi" class="select">
+                        <option value="pemasukan">Pemasukan</option>
+                        <option value="pengeluaran">Pengeluaran</option>
                     </select>
+                </div>
+                <div class="form-control">
+                    <label for="tanggal" class="label">Tanggal</label>
+                    <input id="tanggal" name="tanggal" type="date" class="input" />
                 </div>
                 <div class="form-control">
                     <label for="dompet" class="label">Dompet</label>
-                    <select id="dompet" class="select">
-                        <option>Utama</option>
-                        <option>BRI</option>
-                        <option>BNI</option>
+                    <select id="dompet" name="id_dompet" class="select">
+                        <?php foreach ($dompetResult as $dompet) : ?>
+                            <option value="<?= $dompet["id_dompet"] ?>"><?= $dompet["nama"] ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="form-control">
-                    <label for="jenis-transaksi" class="label">Kategori</label>
-                    <select id="jenis-transaksi" class="select">
-                        <option>Makanan</option>
-                        <option>Liburan</option>
-                        <option>Transportasi</option>
-                        <option>Pajak</option>
-                        <option>Listrik</option>
-                        <option>Langganan</option>
+                <div class="form-control" id="anggaran-form">
+                    <label for="anggaran" class="label">Anggaran terkait</label>
+                    <select id="anggaran" name="id_anggaran" class="select">
+                        <?php foreach ($anggaranResult as $anggaran) : ?>
+                            <option value="<?= $anggaran["id_anggaran"] ?>"><?= $anggaran["nama_anggaran"] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-control" id="tujuan-form">
+                    <label for="tujuan" class="label">Tujuan terkait</label>
+                    <select id="tujuan" name="id_tujuan" class="select">
+                        <?php foreach ($tujuanResult as $tujuan) : ?>
+                            <option value="<?= $tujuan["id_tujuan"] ?>"><?= $tujuan["nama_tujuan"] ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="form-control">
                     <label for="keterangan" class="label">Keterangan</label>
-                    <input id="keterangan" type="text" class="input" />
+                    <input id="keterangan" name="keterangan" type="text" class="input" />
                 </div>
                 <div class="form-control">
                     <label for="jumlah" class="label">Jumlah</label>
-                    <input id="jumlah" type="text" class="input" />
+                    <input id="jumlah" name="jumlah" type="text" class="input" />
                 </div>
-                <a href="#" class="btn">Tambah</a>
+                <input type="submit" class="btn" value="Tambah">
             </form>
         </div>
     </div>
@@ -129,6 +152,20 @@ include '../../backend/protected.php';
 <body>
     <!-- Memanggil fungsi drawer untuk menampilkan komponen drawer -->
     <?php drawer($html); ?>
+    <script>
+        document.getElementById("anggaran-form").style.display = "none";
+        let jenis_transaksi = document.getElementById("jenis-transaksi");
+        jenis_transaksi.addEventListener("input", (event) => {
+            console.log(event.target.value);
+            if (event.target.value == "pemasukan") {
+                document.getElementById("tujuan-form").style.display = "block";
+                document.getElementById("anggaran-form").style.display = "none";
+            } else {
+                document.getElementById("tujuan-form").style.display = "none";
+                document.getElementById("anggaran-form").style.display = "block";
+            }
+        });
+    </script>
 </body>
 
 </html>
