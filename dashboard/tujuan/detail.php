@@ -16,6 +16,16 @@ $query = "SELECT * FROM tujuan WHERE id_tujuan = '$id_tujuan'";
 $result = mysqli_query($conn, $query);
 $tujuan = mysqli_fetch_assoc($result);
 
+// lakukan query untuk mendapatkan data transaksi berdasarkan id tujuan
+$queryTransaksi = "SELECT * FROM pemasukan WHERE id_tujuan = '$id_tujuan'";
+$resultTransaksi = mysqli_query($conn, $queryTransaksi);
+
+// hitung total pemasukan
+$totalPemasukan = 0;
+while ($transaksi = mysqli_fetch_assoc($resultTransaksi)) {
+    $totalPemasukan += $transaksi["jumlah"];
+}
+
 ?>
 
 <!-- Template HTML dari halaman terkait -->
@@ -50,44 +60,38 @@ $tujuan = mysqli_fetch_assoc($result);
         </div>
         <div class="card__body">
             <div class="summary">
-                <span class="summary__balance">Rp 3.500.000</span>
+                <span class="summary__balance">Sisa Rp <?= $tujuan["jumlah_tujuan"] - $totalPemasukan ?></span>
                 <div class="summary__target">
-                    <p>Saldo Awal:</p>
+                    <p>Target:</p>
                     <p>Rp <?= $tujuan["jumlah_tujuan"] ?> </p>
                 </div>
                 <div class="summary__collected">
-                    <p>Pengeluaran:</p>
-                    <p>Rp 8.000.000</p>
+                    <p>Total Pemasukan</p>
+                    <p><?= $totalPemasukan ?></p>
                 </div>
             </div>
 
             <div class="deposit">
                 <div class="deposit__item">
-                    <div class="deposit__header">
-                        <div class="deposit__header--date">
-                            <span class="date">23</span>
-                            <span class="month">November 2022</span>
-                        </div>
-                        <div class="deposit__header--balance">
-                            <span class="balance">Rp 8.000.000</span>
-                        </div>
-                    </div>
-                    <hr />
+                    <hr>
                     <div class="deposit__body">
-                        <div class="deposit__body--content">
+                    <?php foreach($resultTransaksi as $transaksi) : ?>
+                        <a href="/moka-native/dashboard/transaksi/detail.php?id=<?= $transaksi['id'] ?>" class="deposit__body--content">
                             <div class="deposit__body--content--wrapper">
                                 <svg class="deposit__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
                                     <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
                                 </svg>
                                 <div class="deposit__body--content--text">
-                                    <p class="deposit__body--content--text--name">Bali</p>
-                                    <span class="deposit__body--content--text--balance">Pergi ke bali</span>
+                                    <p class="deposit__body--content--text--name"><?= $transaksi["judul"] ?></p>
+                                    <span class="deposit__body--content--text--balance"><?= $transaksi["keterangan"] ?></span>
                                 </div>
                             </div>
                             <div class="deposit__body--content--balance">
-                                <span>- Rp 8.000.000</span>
+                                <span>Rp <?= $transaksi["jumlah"] ?></span>
                             </div>
-                        </div>
+                        </a>
+                    <?php endforeach; ?>
+
                     </div>
                 </div>
             </div>

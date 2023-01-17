@@ -4,6 +4,7 @@
 include '../../components/Drawer.php';
 include '../../backend/protected.php';
 include '../../backend/connectdb.php';
+include '../../backend/getParams.php';
 $id_akun = $_COOKIE['id_akun'];
 
 // fetch data dompet
@@ -17,6 +18,20 @@ $anggaranResult = mysqli_query($conn, $anggaranQuery);
 // fetch data tujuan
 $tujuanQuery = "SELECT * FROM tujuan WHERE id_akun = '$id_akun'";
 $tujuanResult = mysqli_query($conn, $tujuanQuery);
+
+// dapatkan id transaksi dari parameter
+$params = getParams($_SERVER['REQUEST_URI']);
+$id_transaksi = $params["id"];
+
+// select transaksi dengan id yang didapat dari parameter
+$detilTransaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun'"; 
+$detilTransaksiResult = mysqli_query($conn, $detilTransaksiQuery);
+$transaksi = null;
+foreach($detilTransaksiResult as $satuTransaksi){
+    if($satuTransaksi["id"] == $id_transaksi){
+        $transaksi = $satuTransaksi;
+    }
+}
 
 ?>
 
@@ -34,25 +49,25 @@ $tujuanResult = mysqli_query($conn, $tujuanQuery);
                 <svg width="32" height="32" viewBox="0 0 256 256">
                     <path fill="currentColor" d="M221.9 83.2a104 104 0 0 1-20.4 118.3a103.8 103.8 0 0 1-147 0a103.8 103.8 0 0 1 0-147A104 104 0 0 1 195.7 49l22.6-22.7a8.1 8.1 0 0 1 11.4 11.4l-62.1 62l-33.9 34a8.2 8.2 0 0 1-11.4 0a8.1 8.1 0 0 1 0-11.4l27.8-27.7a40.2 40.2 0 1 0 17.8 31.1a8 8 0 0 1 7.6-8.4a7.9 7.9 0 0 1 8.4 7.5a56 56 0 1 1-22.4-41.6l22.8-22.8a87.9 87.9 0 1 0 23.1 29.7a8 8 0 0 1 14.5-6.9Z" />
                 </svg>
-                <h2>Tambah Transaksi</h2>
+                <h2>Edit Transaksi</h2>
             </div>
         </div>
         <div class="card__body">
-            <form class="form" action="/moka-native/backend/transaksi/tambah-transaksi.php" method="post">
+            <form class="form" action="/moka-native/backend/transaksi/edit-transaksi.php?id=<?= $transaksi['id'] ?>" method="post">
                 <div class="form-control">
                     <label for="name" class="label">Nama</label>
-                    <input id="name" name="judul" type="text" class="input" />
+                    <input id="name" name="judul" type="text" class="input" value="<?= $transaksi['judul'] ?>"/>
                 </div>
                 <div class="form-control">
                     <label for="jenis-transaksi" class="label">Jenis Transaksi</label>
                     <select id="jenis-transaksi" name="jenis_transaksi" class="select">
-                        <option value="pemasukan" >Pemasukan</option>
-                        <option value="pengeluaran">Pengeluaran</option>
+                        <option <?php if($transaksi["jumlah"] > 0) echo "selected" ?> value="pemasukan" >Pemasukan</option>
+                        <option <?php if($transaksi["jumlah"] < 0) echo "selected" ?> value="pengeluaran">Pengeluaran</option>
                     </select>
                 </div>
                 <div class="form-control">
                     <label for="tanggal" class="label">Tanggal</label>
-                    <input id="tanggal" name="tanggal" type="date" class="input" />
+                    <input id="tanggal" name="tanggal" type="date" class="input" value="<?= $transaksi['tanggal'] ?>" />
                 </div>
                 <div class="form-control">
                     <label for="dompet" class="label">Dompet</label>
@@ -80,11 +95,11 @@ $tujuanResult = mysqli_query($conn, $tujuanQuery);
                 </div>
                 <div class="form-control">
                     <label for="keterangan" class="label">Keterangan</label>
-                    <input id="keterangan" name="keterangan" type="text" class="input" />
+                    <input id="keterangan" name="keterangan" type="text" class="input" value="<?= $transaksi['keterangan'] ?>"/>
                 </div>
                 <div class="form-control">
                     <label for="jumlah" class="label">Jumlah</label>
-                    <input id="jumlah" name="jumlah" type="text" class="input" />
+                    <input id="jumlah" name="jumlah" type="text" class="input" value="<?= $transaksi['jumlah'] * -1 ?>"/>
                 </div>
                 <input type="submit" class="btn" value="Tambah">
             </form>
@@ -103,7 +118,7 @@ $tujuanResult = mysqli_query($conn, $tujuanQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/components.css">
-    <title>Tujuan</title>
+    <title>Edit Transaksi</title>
     <!-- Stylenya disini -->
     <style>
         .wrapper {

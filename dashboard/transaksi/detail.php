@@ -3,7 +3,27 @@
 <?php
 include '../../components/Drawer.php';
 include '../../backend/protected.php';
+include '../../backend/connectdb.php';
+include '../../backend/getParams.php';
 
+// dapatkan id item dari query
+$params = getParams($_SERVER["REQUEST_URI"]);
+$id_transaksi = $params["id"];
+$id_akun = $_COOKIE["id_akun"];
+
+$detilTransaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun'"; 
+$detilTransaksiResult = mysqli_query($conn, $detilTransaksiQuery);
+$transaksi = null;
+foreach($detilTransaksiResult as $satuTransaksi){
+    if($satuTransaksi["id"] == $id_transaksi){
+        $transaksi = $satuTransaksi;
+    }
+}
+
+$id_dompet = $transaksi["id_dompet"];
+$namaDompetQuery = "SELECT nama FROM dompet WHERE id_dompet = '$id_dompet'";
+$namaDompetResult = mysqli_query($conn ,$namaDompetQuery);
+$namaDompet = mysqli_fetch_assoc($namaDompetResult);
 ?>
 
 <!-- Template HTML dari halaman terkait -->
@@ -29,8 +49,13 @@ include '../../backend/protected.php';
                         </svg>
                     </div>
                     <div class="dropdown-menu">
-                        <a href="/dashboard/transaksi/tambah">Edit</a>
-                        <a href="#">Delete</a>
+                        <a href="edit.php?id=<?= $transaksi["id"] ?>">Edit</a>
+                        <?php if($transaksi["jumlah"] > 0): ?>
+                            <a href="/moka-native/backend/transaksi/delete-pemasukan.php?id=<?= $transaksi["id"] ?>">Delete</a>
+                        <?php endif; ?>
+                        <?php if($transaksi["jumlah"] < 0): ?>
+                            <a href="/moka-native/backend/transaksi/delete-pengeluaran.php?id=<?= $transaksi["id"] ?>">Delete</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -39,13 +64,19 @@ include '../../backend/protected.php';
             <div id="subjudul-detail">
                 <div id="isi-detail">
                     <div id="isi-detail-1">
-                        <b>Makanan dan Minuman</b>
+                        <b><?= $transaksi["judul"] ?></b>
                     </div>
-                    <div id="isi-detail-2">Main</div>
-                    <div id="isi-detail-3">Rabu 23/11/2022</div>
+                    <div id="isi-detail-2"><?= $namaDompet["nama"] ?></div>
+                    <div id="isi-detail-3"><?= $transaksi["tanggal"] ?></div>
                     <br />
                     <hr>
-                    <div id="isi-detail-4">-Rp 60.000,00</div>
+                    <?php if($transaksi["jumlah"] < 0): ?>
+                        <div id="isi-detail-4" class="text-red">Rp <?= $transaksi["jumlah"] ?></div>
+                    <?php endif; ?>
+
+                    <?php if($transaksi["jumlah"] > 0): ?>
+                        <div id="isi-detail-4" class="text-blue">Rp <?= $transaksi["jumlah"] ?></div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -67,6 +98,14 @@ include '../../backend/protected.php';
     <title>Tujuan</title>
     <!-- Stylenya disini -->
     <style>
+        .text-blue {
+            color: var(--success);
+        }
+
+        .text-red {
+            color: var(--error);
+        }
+
         /* DROPDOWN */
         .dropdown {
             position: relative;
@@ -176,7 +215,6 @@ include '../../backend/protected.php';
 
         #isi-detail-4 {
             font-size: 40px;
-            color: rgb(237, 73, 13);
             margin-top: 30px;
         }
 

@@ -13,11 +13,10 @@ $id_dompet = $_POST['id_dompet'];
 $id_tujuan = $_POST['id_tujuan'];
 $id_anggaran = $_POST['id_anggaran'];
 
-
 if($jenis_transaksi == "pemasukan"){
-    $pemasukanQuery = "INSERT INTO pemasukan VALUES ('$id_transaksi', '$judul', '$keterangan', '$jumlah', '$tanggal', '$id_tujuan', '$id_dompet', '$id_akun')";
+    $pemasukanQuery = "INSERT INTO pemasukan VALUES ('$id_transaksi', '$judul', '$keterangan', $jumlah, '$tanggal', '$id_tujuan', '$id_dompet', '$id_akun')";
     $pemasukanResult = mysqli_query($conn, $pemasukanQuery);
-    
+
     if($pemasukanResult){
         header("Location: /moka-native/dashboard/transaksi");
     }else{
@@ -26,9 +25,9 @@ if($jenis_transaksi == "pemasukan"){
 }
 
 if($jenis_transaksi == "pengeluaran"){
-    $pengeluaranQuery = "INSERT INTO pengeluaran VALUES ('$id_transaksi', '$judul', '$keterangan', '$jumlah', '$tanggal', '$id_anggaran', '$id_dompet', '$id_akun')";
+    $pengeluaranQuery = "INSERT INTO pengeluaran VALUES ('$id_transaksi', '$judul', '$keterangan', -$jumlah, '$tanggal', '$id_anggaran', '$id_dompet', '$id_akun')";
     $pengeluaranResult = mysqli_query($conn, $pengeluaranQuery);
-    
+
     if($pengeluaranResult){
         header("Location: /moka-native/dashboard/transaksi");
     }else{

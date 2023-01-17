@@ -1,8 +1,29 @@
-<!-- Disini dilakukan logic yang berkaitan dengan data (CRUD) -->
-<!-- Dan untuk menampung data tersebut pada sebuah variabel agar bisa digunakan di dalam seluruh file -->
 <?php
 include '../../components/Drawer.php';
 include '../../backend/protected.php';
+include '../../backend/connectdb.php';
+
+$id_akun = $_COOKIE['id_akun'];
+// Select all pemasukan dan pengeluaran yang memiliki id akun yang sama
+$transaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun' ORDER BY tanggal DESC";
+$transaksiResult = mysqli_query($conn, $transaksiQuery);
+
+// sum of all jumlah pengeluaran and pemasukan
+$sum = 0;
+$sumPemasukan = 0;
+$sumPengeluaran = 0;
+
+foreach($transaksiResult as $transaksi){
+    $sum = $sum + $transaksi["jumlah"];
+
+    if($transaksi["jumlah"] > 0){
+        $sumPemasukan = $sumPemasukan + $transaksi["jumlah"];
+    }
+
+    if($transaksi["jumlah"] < 0){
+        $sumPengeluaran = $sumPengeluaran + ($transaksi["jumlah"] * -1);
+    }
+}
 
 
 ?>
@@ -10,151 +31,49 @@ include '../../backend/protected.php';
 <!-- Template HTML dari halaman terkait -->
 <?php ob_start(); ?>
 <div>
-    <div class="top-content" style="display: flex">
-        <ul>
-            <li><a class="btn-ghost" href="#"> Bulan Sebelumnya </a></li>
-            <li><a class="btn-ghost" href="#"> Bulan ini </a></li>
-            <li><a class="btn-ghost" href="#"> Bulan Depan</a></li>
-        </ul>
+    <div id="Pendapatan">
+        <div id="subjudul">
+            <div id="subjudul-a">Daftar Transaksi</div>
+        </div>
     </div>
-
-    <hr />
     <div class="div-trans">
         <div class="trans1">
             <div class="isi-trans">
-                <div class="isi-trans1">Saldo</div>
-                <div class="isi-trans2-1">Rp. 280.000,00</div>
-                <br />
-                <div class="isi-trans3-1">Rabu 23/11/2022</div>
+                <div class="isi-trans1">Selisih</div>
+                <div class="isi-trans2-1">Rp. <?= $sum ?></div>
                 <br />
             </div>
         </div>
         <div class="trans2">
             <div class="isi-trans">
-                <div class="isi-trans1">Pemasukan</div>
-                <div class="isi-trans2-2">Rp. 960.000,00</div>
-                <br />
-                <div class="isi-trans3-2">Bulan Ini</div>
+                <div class="isi-trans1">Total Pemasukan</div>
+                <div class="isi-trans2-2">Rp. <?= $sumPemasukan ?></div>
                 <br />
             </div>
         </div>
         <div class="trans3">
             <div class="isi-trans">
-                <div class="isi-trans1">Pengeluaran</div>
-                <div class="isi-trans2-3">Rp. 680.000,00</div>
-                <br />
-                <div class="isi-trans3-3">Bulan Ini</div>
+                <div class="isi-trans1">Total Pengeluaran</div>
+                <div class="isi-trans2-3">Rp. <?= $sumPengeluaran ?></div>
                 <br />
             </div>
         </div>
     </div>
+    <?php foreach($transaksiResult as $transaksi): ?>
+    <a href="detail.php?id=<?= $transaksi["id"] ?>" id="detail">
+        <div id="subjudul-detail">
+            <svg class="detail-icon" width="20" height="20" viewBox="0 0     24 24">
+                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
+            </svg>
+            <div id="isi-detail"><b><?= $transaksi["judul"] ?></b><br /><?= $transaksi["keterangan"] ?></div>
+        </div>
+        <div>
+            <div id="isi-detail"><?= $transaksi["tanggal"] ?></div>
+            <div id="tolbul-detail"><?= $transaksi["jumlah"] ?></div>
+        </div>
+    </a>
+    <?php endforeach; ?>
 
-    <div class="terakhir">6 Transaksi Terakhir</div>
-
-    <div id="Pendapatan">
-        <div id="subjudul">
-            <div id="subjudul-a">23</div>
-            <div id="isi">November 2022</div>
-        </div>
-        <div id="tolbul">Rp. 440.000,00</div>
-    </div>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makanan Harian</div>
-        </div>
-        <div id="tolbul-detail">-Rp.60.000,00</div>
-    </a>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makan Siang</div>
-        </div>
-        <div id="tolbul-detail">-Rp. 140.000,00</div>
-    </a>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makan Malam</div>
-        </div>
-        <div id="tolbul-detail">-Rp. 240.000,00</div>
-    </a>
-    <hr />
-    <div id="Pendapatan">
-        <div id="subjudul">
-            <div id="subjudul-a">22</div>
-            <div id="isi">November 2022</div>
-        </div>
-        <div id="tolbul">Rp. 440.000,00</div>
-    </div>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makanan Harian</div>
-        </div>
-        <div id="tolbul-detail">-Rp.60.000,00</div>
-    </a>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makan Siang</div>
-        </div>
-        <div id="tolbul-detail">-Rp. 140.000,00</div>
-    </a>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makan Malam</div>
-        </div>
-        <div id="tolbul-detail">-Rp. 240.000,00</div>
-    </a>
-    <hr />
-    <div id="Pendapatan">
-        <div id="subjudul">
-            <div id="subjudul-a">21</div>
-            <div id="isi">November 2022</div>
-        </div>
-        <div id="tolbul">Rp. 440.000,00</div>
-    </div>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makanan Harian</div>
-        </div>
-        <div id="tolbul-detail">-Rp.60.000,00</div>
-    </a>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makan Siang</div>
-        </div>
-        <div id="tolbul-detail">-Rp. 140.000,00</div>
-    </a>
-    <a href="detail.php" id="detail">
-        <div id="subjudul-detail">
-            <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-            </svg>
-            <div id="isi-detail"><b>Kuliner</b><br />Makan Malam</div>
-        </div>
-        <div id="tolbul-detail">-Rp. 240.000,00</div>
-    </a>
     <hr />
 </div>
 <?php $html = ob_get_clean(); ?>
@@ -169,7 +88,7 @@ include '../../backend/protected.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/components.css">
-    <title>Tujuan</title>
+    <title>Daftar Transaksi</title>
     <!-- Stylenya disini -->
     <style>
         #Pendapatan {
@@ -224,8 +143,9 @@ include '../../backend/protected.php';
         }
 
         #tolbul-detail {
-            font-size: 18px;
+            font-size: 24px;
             text-align: right;
+            font-weight: bold;
         }
 
         .detail-icon {

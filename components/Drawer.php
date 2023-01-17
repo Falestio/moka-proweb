@@ -332,55 +332,7 @@ function drawer($content){
                 <nav class="nav">
                     <div class="nav__wrapper">
                         <div class="left">
-                            <div class="hamburger-wrapper" @click="toggleSidebar()">
-                                <svg class="hamburger" width="32" height="32" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M22 13c0 1.11-.89 2-2 2H4a2 2 0 1 1 0-4h9l2.5 2l2.5-2h2a2 2 0 0 1 2 2M12 3C3 3 3 9 3 9h18s0-6-9-6M3 18c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3v-1H3v1Z" />
-                                </svg>
-                            </div>
-                            <div class="dropdown--trigger">
-                                <div class="nav__dompet">
-                                    <div class="nav__dompet--icon--wrapper">
-                                        <svg class="nav__dompet--icon" width="32" height="32" viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="M15 18.54c2.13-.33 4.5-.54 7-.54v4H5c0-.65 3.2-2.14 8-3.1v-6.5c-.84.25-1.55.81-2 1.55a3.495 3.495 0 0 0-6 0c.03-3.58 3.5-6.52 8-6.91V7a1 1 0 0 1 1-1a1 1 0 0 1 1 1v.04c4.5.39 7.96 3.33 8 6.91a3.495 3.495 0 0 0-6 0c-.45-.74-1.16-1.3-2-1.56v6.15M7 2a5 5 0 0 1-5 5V2h5Z" />
-                                        </svg>
-                                    </div>
-                                    <div class="nav__dompet--text">
-                                        <p class="nav__dompet--text--title">Liburan</p>
-                                        <span class="nav__dompet--text--balance">Rp 36.230.000</span>
-                                    </div>
-                                    <svg class="nav__dompet--chevron" width="32" height="32" viewBox="0 0 24 24">
-                                        <path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" />
-                                    </svg>
-                                </div>
-                                <div class="dompet__dropdown">
-                                    <div class="dompet__dropdown--menu">
-                                        <NuxtLink to="/dashboard/dompet" class="dompet__dropdown--menu--dompet">
-                                            <div class="dompet__dropdown--menu--dompet--icon--wrapper">
-                                                <svg class="dompet__dropdown--menu--dompet--icon" width="32" height="32" viewBox="0 0 24 24">
-                                                    <path fill="currentColor" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2.28A2 2 0 0 0 22 15V9a2 2 0 0 0-1-1.72V5a2 2 0 0 0-2-2H5m0 2h14v2h-6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6v2H5V5m8 4h7v6h-7V9m3 1.5a1.5 1.5 0 0 0-1.5 1.5a1.5 1.5 0 0 0 1.5 1.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5Z" />
-                                                </svg>
-                                            </div>
-                                            <span class="dompet__dropdown--menu--dompet--title">Rumah Tangga</span>
-                                        </NuxtLink>
-                                        <NuxtLink to="/dashboard/dompet" class="dompet__dropdown--menu--dompet">
-                                            <div class="dompet__dropdown--menu--dompet--icon--wrapper">
-                                                <svg class="dompet__dropdown--menu--dompet--icon" width="32" height="32" viewBox="0 0 24 24">
-                                                    <path fill="currentColor" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2.28A2 2 0 0 0 22 15V9a2 2 0 0 0-1-1.72V5a2 2 0 0 0-2-2H5m0 2h14v2h-6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6v2H5V5m8 4h7v6h-7V9m3 1.5a1.5 1.5 0 0 0-1.5 1.5a1.5 1.5 0 0 0 1.5 1.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5Z" />
-                                                </svg>
-                                            </div>
-                                            <span class="dompet__dropdown--menu--dompet--title">Rumah Tangga</span>
-                                        </NuxtLink>
-                                        <NuxtLink to="/dashboard/dompet" class="dompet__dropdown--menu--dompet">
-                                            <div class="dompet__dropdown--menu--dompet--icon--wrapper">
-                                                <svg class="dompet__dropdown--menu--dompet--icon" width="32" height="32" viewBox="0 0 24 24">
-                                                    <path fill="currentColor" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2.28A2 2 0 0 0 22 15V9a2 2 0 0 0-1-1.72V5a2 2 0 0 0-2-2H5m0 2h14v2h-6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6v2H5V5m8 4h7v6h-7V9m3 1.5a1.5 1.5 0 0 0-1.5 1.5a1.5 1.5 0 0 0 1.5 1.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5Z" />
-                                                </svg>
-                                            </div>
-                                            <span class="dompet__dropdown--menu--dompet--title">Rumah Tangga</span>
-                                        </NuxtLink>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
     
                         <div class="flex">

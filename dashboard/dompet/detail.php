@@ -15,6 +15,28 @@ $query = "SELECT * FROM dompet WHERE id_dompet = '$id_dompet'";
 $result = mysqli_query($conn, $query);
 $dompet = mysqli_fetch_assoc($result);
 
+
+$id_akun = $_COOKIE['id_akun'];
+// Select all pemasukan dan pengeluaran yang memiliki id akun yang sama dan berasal dari dompet yang sama
+$transaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' AND id_dompet = '$id_dompet' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun' AND id_dompet = '$id_dompet' ORDER BY tanggal DESC"; 
+$transaksiResult = mysqli_query($conn, $transaksiQuery);
+
+// sum of all jumlah pengeluaran and pemasukan
+$sum = 0;
+$sumPemasukan = 0;
+$sumPengeluaran = 0;
+foreach($transaksiResult as $transaksi){
+    $sum = $sum + $transaksi["jumlah"];
+
+    if($transaksi["jumlah"] > 0){
+        $sumPemasukan = $sumPemasukan + $transaksi["jumlah"];
+    }
+
+    if($transaksi["jumlah"] < 0){
+        $sumPengeluaran = $sumPengeluaran + ($transaksi["jumlah"] * -1);
+    }
+}
+
 ?>
 
 
@@ -51,86 +73,40 @@ $dompet = mysqli_fetch_assoc($result);
         <div class="card__body">
             <div class="saldo">
                 <h2>Saldo:</h2>
-                <span>Rp. <?= $dompet['saldo'] ?></span>
+                <span>Rp. <?= $dompet['saldo'] + ($sumPemasukan + $sumPengeluaran) ?></span>
             </div>
             <div class="chart">
                 <div class="pemasukan">
                     <figure class="pie-chart">
                         <div class="text">
                             <h2>Pemasukan</h2>
-                            <span>Rp 5.000.000</span>
+                            <span>Rp <?= $sumPemasukan ?></span>
                         </div>
-                        <figcaption>
-                            Startup 38<span style="color: #4e79a7"></span><br />
-                            Investasi Saham 23<span style="color: #f28e2c"></span><br />
-                            Bisnis cafe 16<span style="color: #e15759"></span><br />
-                            Kost 10<span style="color: #76b7b2"></span><br />
-                            Bisnis Laundry 6<span style="color: #59a14f"></span><br />
-                            Dari langit 7<span style="color: #edc949"></span><br />
-                            Dikasih 10<span style="color: #af7aa1"></span><br />
-                            Hibah 14<span style="color: #ff9da7"></span><br />
-                            Ketemu dijalan 16<span style="color: #9c755f"></span>
-                        </figcaption>
                     </figure>
                 </div>
                 <div class="pengeluaran">
                     <figure class="pie-chart">
                         <div class="text">
                             <h2>Pemasukan</h2>
-                            <span>Rp 5.000.000</span>
+                            <span>Rp <?= $sumPengeluaran ?></span>
                         </div>
-                        <figcaption>
-                            Startup 38<span style="color: #4e79a7"></span><br />
-                            Investasi Saham 23<span style="color: #f28e2c"></span><br />
-                            Bisnis cafe 16<span style="color: #e15759"></span><br />
-                            Kost 10<span style="color: #76b7b2"></span><br />
-                            Bisnis Laundry 6<span style="color: #59a14f"></span><br />
-                            Dari langit 7<span style="color: #edc949"></span><br />
-                            Dikasih 10<span style="color: #af7aa1"></span><br />
-                            Hibah 14<span style="color: #ff9da7"></span><br />
-                            Ketemu dijalan 16<span style="color: #9c755f"></span>
-                        </figcaption>
                     </figure>
                 </div>
             </div>
 
             <div class="history">
                 <h3 class="history__title">Daftar Transaksi</h3>
-                <div id="Pendapatan">
-                    <div id="subjudul">
-                        <div id="subjudul-a">23</div>
-                        <div id="isi">November 2022</div>
-                    </div>
-                    <div id="tolbul">Rp. 440.000,00</div>
-                </div>
-                <a href="/moka-native/dashboard/transaksi/detail.php" id="detail">
+                <?php foreach($transaksiResult as $transaksi): ?>
+                <a href="/moka-native/dashboard/transaksi/detail.php?id=<?= $transaksi["id"] ?>" id="detail">
                     <div id="subjudul-detail">
                         <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
                             <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
                         </svg>
-                        <div id="isi-detail"><b>Kuliner</b><br />Makanan Harian</div>
+                        <div id="isi-detail"><b><?= $transaksi["judul"] ?></b><br /><?= $transaksi["keterangan"] ?></div>
                     </div>
-                    <div id="tolbul-detail">-Rp.60.000,00</div>
+                    <div id="tolbul-detail">Rp <?= $transaksi["jumlah"] ?></div>
                 </a>
-                <a href="/moka-native/dashboard/transaksi/detail.php" id="detail">
-                    <div id="subjudul-detail">
-                        <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-                        </svg>
-                        <div id="isi-detail"><b>Kuliner</b><br />Makan Siang</div>
-                    </div>
-                    <div id="tolbul-detail">-Rp. 140.000,00</div>
-                </a>
-                <a href="/moka-native/dashboard/transaksi/detail.php" id="detail">
-                    <div id="subjudul-detail">
-                        <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-                        </svg>
-                        <div id="isi-detail"><b>Kuliner</b><br />Makan Malam</div>
-                    </div>
-                    <div id="tolbul-detail">-Rp. 240.000,00</div>
-                </a>
-                <hr />
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

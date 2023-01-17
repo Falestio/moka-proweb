@@ -14,8 +14,8 @@ $tujuanQuery = "SELECT * FROM tujuan WHERE id_akun = '$id_akun'";
 $tujuanResult = mysqli_query($conn, $tujuanQuery);
 
 // tampilkan data transaksi
-// $transaksiQuery = "SELECT * FROM transaksi WHERE id_akun = '$id_akun'";
-// $transaksiResult = mysqli_query($conn, $transaksiQuery);
+$transaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun' ORDER BY tanggal DESC";
+$transaksiResult = mysqli_query($conn, $transaksiQuery);
 
 // tampilkan data dompet
 $dompetQuery = "SELECT * FROM dompet WHERE id_akun = '$id_akun'";
@@ -102,15 +102,17 @@ $dompetResult = mysqli_query($conn, $dompetQuery);
         <div class="card__body">
             <div class="card__body--contents-wrapper">
                 
+                <?php foreach($transaksiResult as $transaksi): ?>
                 <div class="card__body--content">
                     <svg class="card__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
                         <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
                     </svg>
                     <div class="card__body--content--text">
-                        <p class="card__body--content--text--name">Transkasi</p>
-                        <span class="card__body--content--text--balance">Rp 8000</span>
+                        <p class="card__body--content--text--name"><?= $transaksi["judul"] ?></p>
+                        <span class="card__body--content--text--balance">Rp <?= $transaksi["jumlah"] ?></span>
                     </div>
                 </div>
+                <?php endforeach; ?>
 
             </div>
         </div>
