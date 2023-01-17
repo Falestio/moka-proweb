@@ -33,6 +33,14 @@
   font-family: "Inter", sans-serif;
 }
 
+.text-blue {
+  color: #1E90FF;
+}
+
+.text-red {
+  color: hotpink;
+}
+
 li {
   list-style: none;
 }

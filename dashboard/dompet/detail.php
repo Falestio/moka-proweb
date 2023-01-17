@@ -18,21 +18,21 @@ $dompet = mysqli_fetch_assoc($result);
 
 $id_akun = $_COOKIE['id_akun'];
 // Select all pemasukan dan pengeluaran yang memiliki id akun yang sama dan berasal dari dompet yang sama
-$transaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' AND id_dompet = '$id_dompet' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun' AND id_dompet = '$id_dompet' ORDER BY tanggal DESC"; 
+$transaksiQuery = "SELECT * FROM pemasukan WHERE id_akun = '$id_akun' AND id_dompet = '$id_dompet' UNION SELECT * FROM pengeluaran WHERE id_akun = '$id_akun' AND id_dompet = '$id_dompet' ORDER BY tanggal DESC";
 $transaksiResult = mysqli_query($conn, $transaksiQuery);
 
 // sum of all jumlah pengeluaran and pemasukan
 $sum = 0;
 $sumPemasukan = 0;
 $sumPengeluaran = 0;
-foreach($transaksiResult as $transaksi){
+foreach ($transaksiResult as $transaksi) {
     $sum = $sum + $transaksi["jumlah"];
 
-    if($transaksi["jumlah"] > 0){
+    if ($transaksi["jumlah"] > 0) {
         $sumPemasukan = $sumPemasukan + $transaksi["jumlah"];
     }
 
-    if($transaksi["jumlah"] < 0){
+    if ($transaksi["jumlah"] < 0) {
         $sumPengeluaran = $sumPengeluaran + ($transaksi["jumlah"] * -1);
     }
 }
@@ -87,7 +87,7 @@ foreach($transaksiResult as $transaksi){
                 <div class="pengeluaran">
                     <figure class="pie-chart">
                         <div class="text">
-                            <h2>Pemasukan</h2>
+                            <h2>Pengeluaran</h2>
                             <span>Rp <?= $sumPengeluaran ?></span>
                         </div>
                     </figure>
@@ -96,16 +96,33 @@ foreach($transaksiResult as $transaksi){
 
             <div class="history">
                 <h3 class="history__title">Daftar Transaksi</h3>
-                <?php foreach($transaksiResult as $transaksi): ?>
-                <a href="/moka-native/dashboard/transaksi/detail.php?id=<?= $transaksi["id"] ?>" id="detail">
-                    <div id="subjudul-detail">
-                        <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#888888" d="M1 15q0-1.5.65-2.625t1.7-1.875q1.05-.75 2.4-1.125Q7.1 9 8.5 9t2.75.375q1.35.375 2.4 1.125q1.05.75 1.7 1.875Q16 13.5 16 15Zm17 8v-8q0-2.875-1.762-4.887Q14.475 8.1 11.275 7.3L11 5h5V1h2v4h5l-1.65 16.55q-.075.6-.538 1.025Q20.35 23 19.7 23ZM1 19v-2h15v2Zm1 4q-.425 0-.712-.288Q1 22.425 1 22v-1h15v1q0 .425-.287.712Q15.425 23 15 23Z" />
-                        </svg>
-                        <div id="isi-detail"><b><?= $transaksi["judul"] ?></b><br /><?= $transaksi["keterangan"] ?></div>
-                    </div>
-                    <div id="tolbul-detail">Rp <?= $transaksi["jumlah"] ?></div>
-                </a>
+                <?php foreach ($transaksiResult as $transaksi) : ?>
+                    <a href="/moka-native/dashboard/transaksi/detail.php?id=<?= $transaksi["id"] ?>" id="detail">
+                        <div id="subjudul-detail">
+
+                            <?php if ($transaksi["jumlah"] > 0) : ?>
+                                <svg width="32" height="32" viewBox="0 0 24 24">
+                                    <g fill="none">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 15v3m0 3v-3m0 0h-3m3 0h3" />
+                                        <path fill="currentColor" fill-rule="evenodd" d="M5 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h7.083A6.036 6.036 0 0 1 12 18c0-1.148.322-2.22.881-3.131A3.001 3.001 0 0 1 9 12a3 3 0 1 1 5.869.881A5.972 5.972 0 0 1 18 12c1.537 0 2.939.578 4 1.528V8a3 3 0 0 0-3-3H5zm7 6a1 1 0 1 0 0 2a1 1 0 0 0 0-2z" clip-rule="evenodd" />
+                                    </g>
+                                </svg>
+                            <?php else : ?>
+                                <svg width="32" height="32" viewBox="0 0 24 24">
+                                    <g fill="none">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 18h6" />
+                                        <path fill="currentColor" fill-rule="evenodd" d="M5 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h7.083A6.036 6.036 0 0 1 12 18c0-1.148.322-2.22.881-3.131A3.001 3.001 0 0 1 9 12a3 3 0 1 1 5.869.881A5.972 5.972 0 0 1 18 12c1.537 0 2.939.578 4 1.528V8a3 3 0 0 0-3-3H5zm7 6a1 1 0 1 0 0 2a1 1 0 0 0 0-2z" clip-rule="evenodd" />
+                                    </g>
+                                </svg>
+                            <?php endif; ?>
+                            <div id="isi-detail"><b><?= $transaksi["judul"] ?></b><br /><?= $transaksi["keterangan"] ?></div>
+                        </div>
+                        <?php if ($transaksi["jumlah"] > 0) : ?>
+                            <div id="tolbul-detail" class="text-blue">Rp <?= $transaksi["jumlah"] ?></div>
+                        <?php else : ?>
+                            <div id="tolbul-detail" class="text-red">Rp <?= $transaksi["jumlah"] ?></div>
+                        <?php endif; ?>
+                    </a>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -126,6 +143,14 @@ foreach($transaksiResult as $transaksi){
     <title>Tujuan</title>
     <!-- Stylenya disini -->
     <style>
+        .text-blue {
+            color: #1E90FF;
+        }
+
+        .text-red {
+            color: hotpink;
+        }
+
         /* DROPDOWN */
         .dropdown {
             position: relative;

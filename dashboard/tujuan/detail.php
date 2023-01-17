@@ -75,22 +75,25 @@ while ($transaksi = mysqli_fetch_assoc($resultTransaksi)) {
                 <div class="deposit__item">
                     <hr>
                     <div class="deposit__body">
-                    <?php foreach($resultTransaksi as $transaksi) : ?>
-                        <a href="/moka-native/dashboard/transaksi/detail.php?id=<?= $transaksi['id'] ?>" class="deposit__body--content">
-                            <div class="deposit__body--content--wrapper">
-                                <svg class="deposit__body--content--icon" width="32" height="32" viewBox="0 0 256 256">
-                                    <path fill="currentColor" d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z" />
-                                </svg>
-                                <div class="deposit__body--content--text">
-                                    <p class="deposit__body--content--text--name"><?= $transaksi["judul"] ?></p>
-                                    <span class="deposit__body--content--text--balance"><?= $transaksi["keterangan"] ?></span>
+                        <?php foreach ($resultTransaksi as $transaksi) : ?>
+                            <a href="/moka-native/dashboard/transaksi/detail.php?id=<?= $transaksi['id'] ?>" class="deposit__body--content">
+                                <div class="deposit__body--content--wrapper">
+                                    <svg width="32" height="32" viewBox="0 0 24 24">
+                                        <g fill="none">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 15v3m0 3v-3m0 0h-3m3 0h3" />
+                                            <path fill="currentColor" fill-rule="evenodd" d="M5 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h7.083A6.036 6.036 0 0 1 12 18c0-1.148.322-2.22.881-3.131A3.001 3.001 0 0 1 9 12a3 3 0 1 1 5.869.881A5.972 5.972 0 0 1 18 12c1.537 0 2.939.578 4 1.528V8a3 3 0 0 0-3-3H5zm7 6a1 1 0 1 0 0 2a1 1 0 0 0 0-2z" clip-rule="evenodd" />
+                                        </g>
+                                    </svg>
+                                    <div class="deposit__body--content--text">
+                                        <p class="deposit__body--content--text--name"><?= $transaksi["judul"] ?></p>
+                                        <span class="deposit__body--content--text--balance"><?= $transaksi["keterangan"] ?></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="deposit__body--content--balance">
-                                <span>Rp <?= $transaksi["jumlah"] ?></span>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
+                                <div class="deposit__body--content--balance">
+                                    <span class="text-blue">Rp <?= $transaksi["jumlah"] ?></span>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
 
                     </div>
                 </div>
@@ -113,6 +116,14 @@ while ($transaksi = mysqli_fetch_assoc($resultTransaksi)) {
     <title>Tujuan</title>
     <!-- Stylenya disini -->
     <style>
+        .text-blue {
+            color: #1E90FF;
+        }
+
+        .text-red {
+            color: hotpink;
+        }
+
         /* DROPDOWN */
         .dropdown {
             position: relative;
